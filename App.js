@@ -7,7 +7,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import RecentExpenses from "./screens/RecentExpenses";
 import AllExpenses from "./screens/AllExpenses";
 import { GlobalStyles } from "./constans/styles";
-import {Ionicons} from '@expo/vector-icons'
+import { Ionicons } from "@expo/vector-icons";
+import IconButton from "./components/UI/IconButton";
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -15,42 +16,52 @@ const BottomTabs = createBottomTabNavigator();
 const ExpensesOverview = () => {
   return (
     <BottomTabs.Navigator
-      screenOptions={{
+      screenOptions={({navigation}) => ({
         headerStyle: {
           backgroundColor: GlobalStyles.colors.primary500,
         },
         headerTintColor: "white",
         tabBarStyle: {
-          backgroundColor: 'white',
+          backgroundColor: "white",
         },
         tabBarActiveTintColor: GlobalStyles.colors.primary500,
-      }}
+        headerRight: ({ tintColor }) => (
+          <IconButton
+            icon="add"
+            color={tintColor}
+            size={24}
+            onPress={() => navigation.navigate('ManageExpense') }
+          />
+        ),
+      })}
     >
       <BottomTabs.Screen
         name="RecentExpenses"
         component={RecentExpenses}
         options={{
-          title: 'Recent Expenses',
-          tabBarLabel: 'Recent',
+          title: "Recent Expenses",
+          tabBarLabel: "Recent",
           tabBarLabelStyle: {
-            fontSize: 12
+            fontSize: 12,
           },
 
-          tabBarIcon: ({color, size}) => <Ionicons name='hourglass' size={size} color={color}
-
-        />
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="hourglass" size={size} color={color} />
+          ),
         }}
       />
       <BottomTabs.Screen
         name="AllExpenses"
         component={AllExpenses}
         options={{
-          title: 'All Expenses',
-          tabBarLabel: 'All Expenses',
+          title: "All Expenses",
+          tabBarLabel: "All Expenses",
           tabBarLabelStyle: {
-            fontSize: 12
+            fontSize: 12,
           },
-          tabBarIcon: ({color, size}) => <Ionicons name='calendar' size={size} color={color} />
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="calendar" size={size} color={color} />
+          ),
         }}
       />
     </BottomTabs.Navigator>
