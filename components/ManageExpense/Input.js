@@ -13,7 +13,7 @@ const Input = ({label, style, textInputConfig, invalid }) => {
     inputStyles.push(styles.invalidInput)
   }
 
-  console.log(invalid);
+
 
   return (
     <View style={[styles.inputContainer, style]}>
