@@ -7,10 +7,16 @@ import { GlobalStyles } from "../constans/styles";
 import { ExpensesContext } from "../store/expenses-context";
 
 const ManageExpense = ({ route, navigation }) => {
+  const expansesCtx = useContext(ExpensesContext);
 
-  const expansesCtx = useContext(ExpensesContext)
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
+
+  const selectedExpense = expansesCtx.expenses.find(
+    (expense) => expense.id === editedExpenseId
+  );
+
+  console.log('====>', selectedExpense);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -19,7 +25,7 @@ const ManageExpense = ({ route, navigation }) => {
   }, [navigation, isEditing]);
 
   const deleteExpenseHandler = () => {
-    expansesCtx.deleteExpense(editedExpenseId)
+    expansesCtx.deleteExpense(editedExpenseId);
     navigation.goBack();
   };
 
@@ -27,26 +33,24 @@ const ManageExpense = ({ route, navigation }) => {
     navigation.goBack();
   };
 
-  const confirmHandler = () => {
+  const confirmHandler = (expenseData) => {
     if (isEditing) {
-      expansesCtx.updateExpense()
+      expansesCtx.updateExpense(editedExpenseId, expenseData);
     } else {
-      expansesCtx.addExpense
+      expansesCtx.addExpense(expenseData);
     }
     navigation.goBack();
-  }
+  };
 
   return (
     <View style={styles.container}>
-      <ExpenseForm />
-      <View style={styles.buttons}>
-        <Button style={styles.button} mode="flat" onPress={cancelHandler}>
-          Cancel
-        </Button>
-        <Button style={styles.button} onPress={confirmHandler}>
-          {isEditing ? 'Update' : 'Add'}
-        </Button>
-      </View>
+      <ExpenseForm
+        onCancel={cancelHandler}
+        onSubmit={confirmHandler}
+        submitButtonLabel={isEditing ? "Update" : "Add"}
+        defaultValues={selectedExpense}
+      />
+
       {isEditing && (
         <View style={styles.deleteContainer}>
           <IconButton
@@ -70,12 +74,12 @@ const styles = StyleSheet.create({
     backgroundColor: GlobalStyles.colors.primary800,
   },
   buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   button: {
-    minWidth: '40%'
+    minWidth: "40%",
   },
   deleteContainer: {
     marginTop: 16,
